@@ -1,0 +1,825 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="http://q1.qlogo.cn/g?b=qq&amp;nk=2734184475&amp;s=640">
+  <link rel="icon" href="http://q1.qlogo.cn/g?b=qq&amp;nk=2734184475&amp;s=640">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="落落">
+  <meta name="keywords" content="摄影,生活,技术,Python,Linux,可爱">
+  
+    <meta name="description" content="Golang 学习笔记——func函数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Golang 学习笔记——func函数">
+<meta property="og:url" content="http://example.com/2022/05/01/Golang-function-note/index.html">
+<meta property="og:site_name" content="落落のBlog😊">
+<meta property="og:description" content="Golang 学习笔记——func函数">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/icon_img.png">
+<meta property="article:published_time" content="2022-05-01T18:17:48.000Z">
+<meta property="article:modified_time" content="2022-05-01T18:17:48.000Z">
+<meta property="article:author" content="落落">
+<meta property="article:tag" content="Golang">
+<meta property="article:tag" content="Coding">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/icon_img.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Golang 学习笔记——func函数 - 落落のBlog😊</title>
+
+  <link  rel="stylesheet" href="https://unpkg.zhimg.com/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://unpkg.zhimg.com/github-markdown-css@4/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://unpkg.zhimg.com/hint.css@2/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://unpkg.zhimg.com/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":21276303,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <!-- 51.la Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('//js.users.51.la/21276303.js');
+      }
+    </script>
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>😊落落のBlog😊</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/icon_img.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Golang 学习笔记——func函数"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        落落
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-05-02 02:17" pubdate>
+          2022年5月2日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          1.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          11 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Golang 学习笔记——func函数</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="go-函数"><a href="#go-函数" class="headerlink" title="go 函数."></a>go 函数.</h1><p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-2.png" srcset="/img/loading.gif" lazyload>  </p>
+<h2 id="函数调用过程"><a href="#函数调用过程" class="headerlink" title="函数调用过程"></a>函数调用过程</h2><p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-1.png" srcset="/img/loading.gif" lazyload><br><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-3.png" srcset="/img/loading.gif" lazyload><br><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-4.png" srcset="/img/loading.gif" lazyload>  </p>
+<h2 id="函数的参数使用"><a href="#函数的参数使用" class="headerlink" title="函数的参数使用."></a>函数的参数使用.</h2><p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-5.png" srcset="/img/loading.gif" lazyload>  </p>
+<h2 id="实参和形参"><a href="#实参和形参" class="headerlink" title="实参和形参:"></a>实参和形参:</h2><p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-6.png" srcset="/img/loading.gif" lazyload>  </p>
+<h2 id="函数传参"><a href="#函数传参" class="headerlink" title="函数传参:"></a>函数传参:</h2><p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-7.png" srcset="/img/loading.gif" lazyload><br><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-8.png" srcset="/img/loading.gif" lazyload>  </p>
+<h2 id="可变参数"><a href="#可变参数" class="headerlink" title="可变参数:"></a>可变参数:</h2><p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-9.png" srcset="/img/loading.gif" lazyload><br><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-10.png" srcset="/img/loading.gif" lazyload>  </p>
+<h2 id="参数传递"><a href="#参数传递" class="headerlink" title="参数传递:"></a>参数传递:</h2><p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-13.png" srcset="/img/loading.gif" lazyload>  </p>
+<h3 id="参数的值传递"><a href="#参数的值传递" class="headerlink" title="参数的值传递:"></a>参数的值传递:</h3><p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-11.png" srcset="/img/loading.gif" lazyload>  </p>
+<h3 id="参数的引用传递"><a href="#参数的引用传递" class="headerlink" title="参数的引用传递:"></a>参数的引用传递:</h3><p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-12.png" srcset="/img/loading.gif" lazyload>  </p>
+<h2 id="函数的返回值"><a href="#函数的返回值" class="headerlink" title="函数的返回值"></a>函数的返回值</h2><p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-17.png" srcset="/img/loading.gif" lazyload>  </p>
+<hr>
+<p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-14.png" srcset="/img/loading.gif" lazyload><br><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-15.png" srcset="/img/loading.gif" lazyload>  </p>
+<blockquote>
+<p>在定义参数返回值的时候已经初始化了.</p>
+</blockquote>
+<h3 id="函数多返回值"><a href="#函数多返回值" class="headerlink" title="函数多返回值"></a>函数多返回值</h3><p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-16.png" srcset="/img/loading.gif" lazyload>  </p>
+<h3 id="Return-语句"><a href="#Return-语句" class="headerlink" title="Return 语句"></a>Return 语句</h3><p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-18.png" srcset="/img/loading.gif" lazyload><br><code>return</code>语句：词义”返回”  </p>
+<ol>
+<li>一个函数有返回值，那么使用return将返回值返回给调用处</li>
+<li>同时意味着结束了函数的执行</li>
+</ol>
+<p><strong>注意点:</strong></p>
+<ol>
+<li>一个函数定义了返回值，必须使用return语句将<strong>结果返回给调用处</strong>。return后的数据必须和<strong>函数定义的一致</strong>：个数，类型，顺序。</li>
+<li>可以使用<code>_</code>,来舍弃多余的返回值</li>
+<li>如果一个函数定义了有返回值，那么函数中有分支，循环，那么要保证，无论执行了哪个分支，都要有<code>return</code>语句被执行到.</li>
+<li>如果一个函数没有定义返回值，那么函数中也可以使用return,专门用于<strong>结束函数的执行</strong>。</li>
+</ol>
+<h2 id="函数中变量的作用域"><a href="#函数中变量的作用域" class="headerlink" title="函数中变量的作用域"></a>函数中变量的作用域</h2><p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-19.png" srcset="/img/loading.gif" lazyload>  </p>
+<blockquote>
+<p>随着函数的结束,函数内的变量自己会销毁.</p>
+</blockquote>
+<h3 id="全局变量和局部变量"><a href="#全局变量和局部变量" class="headerlink" title="全局变量和局部变量"></a>全局变量和局部变量</h3><p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-20.png" srcset="/img/loading.gif" lazyload>  </p>
+<blockquote>
+<p>全局变量 <strong>不支持简短定义的写法</strong></p>
+</blockquote>
+<h2 id="递归函数"><a href="#递归函数" class="headerlink" title="递归函数"></a>递归函数</h2><p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-21.png" srcset="/img/loading.gif" lazyload><br><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-22.png" srcset="/img/loading.gif" lazyload><br><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-23.png" srcset="/img/loading.gif" lazyload><br><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-24.png" srcset="/img/loading.gif" lazyload>  </p>
+<h2 id="defer-延迟函数"><a href="#defer-延迟函数" class="headerlink" title="defer(延迟函数)"></a>defer(延迟函数)</h2><p><strong>defer的词义:”延迟”,”推迟”</strong><br>在go语言中,使用 <code>defer</code> 关键字来延迟一个函数或者方法的执行.  </p>
+<ol>
+<li>deferi函数或方法：<strong>一个函数或方法的执行被延迟了。</strong></li>
+<li>defer的用法:<br>对象,close(),临时文件的删除.<br>文件.open()<br>defer close() 关闭文件  </li>
+<li>语言中关于异常的处理，<br>使用 <code>panic()</code> 和 <code>recover()</code><br>panic函数用于引发恐慌，导致程序中断执行<br>recover函数用于恢复程序的执行，<code>recover()</code>语法上要求必须在 <code>defer</code> 中执行。</li>
+<li>如果多个defer函数：</li>
+<li>deferi函数传递参数的时候：</li>
+</ol>
+<h3 id="栈的结构-先进后出-后进先出"><a href="#栈的结构-先进后出-后进先出" class="headerlink" title="栈的结构(先进后出!后进先出!)"></a>栈的结构(先进后出!后进先出!)</h3><p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-25.png" srcset="/img/loading.gif" lazyload><br>当一个函数有多个延迟调用时，它们被添加到一<br>个堆栈中，并Last In First Out(LIFO) <strong>先进后出!后进先出!</strong> 的顺序中执行。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-26.png" srcset="/img/loading.gif" lazyload><br><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-27.png" srcset="/img/loading.gif" lazyload>  </p>
+<h3 id="defer-注意点"><a href="#defer-注意点" class="headerlink" title="defer 注意点"></a>defer 注意点</h3><ol>
+<li>当外围函数中的语句正常执行完毕时，只有其中所有的延迟函数都执行完毕，外围函数才会真正的结束执行。</li>
+<li>当执行外围函数中的return语句时，只有其中所有的延迟函数都执行完毕后，外围函数才会真正返回。</li>
+<li>当外围函数中的代码引发运行恐慌时，只有其中所有的延迟函数都执行完毕后，该运行时恐慌才会真正被扩展至调用函数。</li>
+</ol>
+<h2 id="函数的数据类型"><a href="#函数的数据类型" class="headerlink" title="函数的数据类型"></a>函数的数据类型</h2><p>函数的类型：<br><code>func(参数列表的数据类型)(返回值列表的数据类型)</code>  </p>
+<p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-31.png" srcset="/img/loading.gif" lazyload>  </p>
+<h3 id="基本类型回顾"><a href="#基本类型回顾" class="headerlink" title="基本类型回顾"></a>基本类型回顾</h3><p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-28.png" srcset="/img/loading.gif" lazyload>  </p>
+<h2 id="函数的本质"><a href="#函数的本质" class="headerlink" title="函数的本质"></a>函数的本质</h2><p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-30.png" srcset="/img/loading.gif" lazyload>  </p>
+<hr>
+<p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-29.png" srcset="/img/loading.gif" lazyload></p>
+<blockquote>
+<p>“说到底,函数也是一种特殊类型的变量.”  </p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-32.png" srcset="/img/loading.gif" lazyload>  </p>
+<h2 id="匿名函数"><a href="#匿名函数" class="headerlink" title="匿名函数"></a>匿名函数</h2><p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-36.png" srcset="/img/loading.gif" lazyload>  </p>
+<hr>
+<p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-34.png" srcset="/img/loading.gif" lazyload><br><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-35.png" srcset="/img/loading.gif" lazyload>  </p>
+<h2 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h2><p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-41.png" srcset="/img/loading.gif" lazyload>  </p>
+<hr>
+<p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-37.png" srcset="/img/loading.gif" lazyload><br><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-38.png" srcset="/img/loading.gif" lazyload><br><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-39.png" srcset="/img/loading.gif" lazyload><br><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-40.png" srcset="/img/loading.gif" lazyload>  </p>
+<h2 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h2><ol>
+<li>go 语言支持函数式编程:<br> 支持将一个函数作为另一个函数的参数<br> 也支持将一个函数作为另一个函数的返回值.  </li>
+<li>闭包(closure):  <ol>
+<li>一个外层函数中,有内层函数,该内层函数中,会操作外层函数的<strong>局部变量</strong>(外层函数中的参数，或者外层函数中直接定义的变量),并且该外层函数的返回值就是这个内层函数.<br>这个<strong>内层函数和外层函数的局部变量</strong>，统称为<strong>闭包结构</strong>。</li>
+<li>局部变量的<strong>生命周期</strong>会发生改变，正常的局部变量随着函数调用而创建，随着函数的结束而销毁<br>但是闭包结构中的外层函数的局部变量并不会随着外层函数的结束销毁，因为内层函数还要<strong>继续使用</strong>。</li>
+</ol>
+</li>
+</ol>
+<hr>
+<p><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-43.png" srcset="/img/loading.gif" lazyload><br><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-42.png" srcset="/img/loading.gif" lazyload><br><img src="https://cdn.jsdelivr.net/gh/WhaleFell/GolangCoding@master/notes/img/func-44.png" srcset="/img/loading.gif" lazyload>  </p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Golang/" class="category-chain-item">Golang</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Golang/">#Golang</a>
+      
+        <a href="/tags/Coding/">#Coding</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Golang 学习笔记——func函数</div>
+      <div>http://example.com/2022/05/01/Golang-function-note/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>落落</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年5月2日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/05/02/Golang-pointer-note/" title="Golang 学习笔记——Pointer指针">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Golang 学习笔记——Pointer指针</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/05/01/Golang-map-note/" title="Golang 学习笔记——map映射数据结构">
+                        <span class="hidden-mobile">Golang 学习笔记——map映射数据结构</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://unpkg.zhimg.com/gitalk@1/dist/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"b2fd920dada050fed5b3","clientSecret":"5c847cefe7df2df634886eafa178877899404378","repo":"AdminWhaleFall.github.io","owner":"WhaleFell","admin":["WhaleFell"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://gitalkproxy.gitalkproxy.workers.dev/?https://github.com/login/oauth/access_token"},
+          {
+            id: '4c9942f0ea7f97fa4e6dc69ed9f78e74'
+          }
+        )
+        var gitalk = new Gitalk(options);
+        gitalk.render('gitalk-container');
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      粤ICP证113416号
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=1132608"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>粤公网安备1132608号</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://unpkg.zhimg.com/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://unpkg.zhimg.com/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://unpkg.zhimg.com/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://unpkg.zhimg.com/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://unpkg.zhimg.com/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://unpkg.zhimg.com/tocbot@4/dist/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://unpkg.zhimg.com/clipboard@2/dist/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://unpkg.zhimg.com/anchor-js@4/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://unpkg.zhimg.com/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

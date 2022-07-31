@@ -1,0 +1,900 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="http://q1.qlogo.cn/g?b=qq&amp;nk=2734184475&amp;s=640">
+  <link rel="icon" href="http://q1.qlogo.cn/g?b=qq&amp;nk=2734184475&amp;s=640">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="落落">
+  <meta name="keywords" content="摄影,生活,技术,Python,Linux,可爱">
+  
+    <meta name="description" content="Python 异步协程百万并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python asyncio 异步协程百万并发">
+<meta property="og:url" content="http://example.com/2021/08/18/Pytho-async/index.html">
+<meta property="og:site_name" content="落落のBlog😊">
+<meta property="og:description" content="Python 异步协程百万并发">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/AdminWhaleFall/Pic@master/img/20210630201524.png">
+<meta property="article:published_time" content="2021-08-18T11:37:48.000Z">
+<meta property="article:modified_time" content="2021-08-18T11:37:48.000Z">
+<meta property="article:author" content="落落">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Coding">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/AdminWhaleFall/Pic@master/img/20210630201524.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Python asyncio 异步协程百万并发 - 落落のBlog😊</title>
+
+  <link  rel="stylesheet" href="https://unpkg.zhimg.com/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://unpkg.zhimg.com/github-markdown-css@4/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://unpkg.zhimg.com/hint.css@2/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://unpkg.zhimg.com/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":21276303,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <!-- 51.la Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('//js.users.51.la/21276303.js');
+      }
+    </script>
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>😊落落のBlog😊</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://cdn.jsdelivr.net/gh/AdminWhaleFall/Pic@master/img/20210630201524.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Python asyncio 异步协程百万并发"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        落落
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-08-18 19:37" pubdate>
+          2021年8月18日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          6.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          57 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Python asyncio 异步协程百万并发</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Python-asyncio-异步协程百万并发"><a href="#Python-asyncio-异步协程百万并发" class="headerlink" title="Python asyncio 异步协程百万并发"></a>Python asyncio 异步协程百万并发</h1><h2 id="协程（coroutine）"><a href="#协程（coroutine）" class="headerlink" title="协程（coroutine）"></a><strong>协程（coroutine）</strong></h2><blockquote>
+<p>本质就是一个<strong>函数</strong></p>
+</blockquote>
+<h2 id="事件循环——-event-loop"><a href="#事件循环——-event-loop" class="headerlink" title="事件循环——(event_loop)"></a><strong>事件循环</strong>——(event_loop)</h2><p><strong>协程函数</strong>，不是像普通函数那样直接调用运行的，必须<strong>添加到事件循环</strong>中，然后由<strong>事件循环</strong>去运行，单独运行协程函数是不会有结果的，看一个简单的例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">import</span> asyncio<br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">say_after_time</span>(<span class="hljs-params">delay,what</span>):<br>        <span class="hljs-keyword">await</span> asyncio.sleep(delay)<br>        <span class="hljs-built_in">print</span>(what)<br> <br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;开始时间为： <span class="hljs-subst">&#123;time.time()&#125;</span>&quot;</span>)<br>        <span class="hljs-keyword">await</span> say_after_time(<span class="hljs-number">1</span>,<span class="hljs-string">&quot;hello&quot;</span>)<br>        <span class="hljs-keyword">await</span> say_after_time(<span class="hljs-number">2</span>,<span class="hljs-string">&quot;world&quot;</span>)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;结束时间为： <span class="hljs-subst">&#123;time.time()&#125;</span>&quot;</span>)<br> <br>loop=asyncio.get_event_loop()    <span class="hljs-comment">#创建事件循环对象</span><br><span class="hljs-comment"># loop=asyncio.new_event_loop()   #与上面等价，创建新的事件循环</span><br>loop.run_until_complete(main())  <span class="hljs-comment">#通过事件循环对象运行协程函数</span><br>loop.close()<br></code></pre></td></tr></table></figure>
+
+<p>在python3.6版本中，如果我们单独像执行普通函数那样执行一个协程函数，只会返回一个coroutine对象（python3.7）如下所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>main()<br>&lt;coroutine <span class="hljs-built_in">object</span> main at <span class="hljs-number">0x1053bb7c8</span>&gt;<br></code></pre></td></tr></table></figure>
+
+<h3 id="获取事件循环对象的几种方式"><a href="#获取事件循环对象的几种方式" class="headerlink" title="获取事件循环对象的几种方式"></a>获取事件循环对象的几种方式</h3><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs abnf"><span class="hljs-attribute">loop</span> <span class="hljs-operator">=</span> asyncio.get_event_loop()<br></code></pre></td></tr></table></figure>
+<p>它是python3.7中新添加的，<strong>获得一个事件循环</strong>，如果当前线程<strong>还没有事件循环</strong>，则<strong>创建一个新的事件循环loop；</strong></p>
+<h3 id="通过事件循环运行协程函数的两种方式"><a href="#通过事件循环运行协程函数的两种方式" class="headerlink" title="通过事件循环运行协程函数的两种方式"></a>通过事件循环运行协程函数的两种方式</h3><ol>
+<li><p>创建事件循环对象loop，即<code>asyncio.get_event_loop()</code>，<strong>通过事件循环运行协程函数</strong>.</p>
+</li>
+<li><p>直接通过<code>asyncio.run(function_name)</code>运行<strong>协程函数。</strong></p>
+<blockquote>
+<p><strong>但是需要注意的是，首先run函数是python3.7版本新添加的，前面的版本是没有的；</strong></p>
+</blockquote>
+<p> 其次，这个run函数总是<strong>会创建一个新的事件循环并在run结束之后关闭事件循环</strong>，所以，如果在<strong>同一个线程</strong>中已经有了一个事件循环，则<strong>不能再使用这个函数</strong>了，因为<strong>同一个线程不能有两个事件循环</strong>，而且这个run函数<strong>不能同时运行两次</strong>，因为他已经创建一个了。即<strong>同一个线程中是不允许有多个事件循环loop的</strong>。</p>
+</li>
+</ol>
+<h2 id="Task任务"><a href="#Task任务" class="headerlink" title="Task任务"></a>Task任务</h2><h3 id="创建任务（两种方法）"><a href="#创建任务（两种方法）" class="headerlink" title="创建任务（两种方法）"></a>创建任务（两种方法）</h3><ol>
+<li><p><code>task = asyncio.create_task(coro())</code></p>
+<blockquote>
+<p><strong>这是3.7版本新添加的</strong>,<strong>可以传协程函数</strong></p>
+</blockquote>
+</li>
+<li><p><code>task = asyncio.ensure_future(coro())</code></p>
+</li>
+<li><p>也可以：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">loop.create_future()<br>loop.create_task(coro)<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="获取某一个任务的方法"><a href="#获取某一个任务的方法" class="headerlink" title="获取某一个任务的方法"></a>获取某一个任务的方法</h3><ol>
+<li><p><code>task=asyncio.current_task(loop=None)</code></p>
+<blockquote>
+<p>返回在某一个指定的loop中，<strong>当前正在运行的任务</strong>，<strong>如果没有任务正在运行，则返回None</strong>；<br>如果loop为None，<strong>则默认为在当前的事件循环中获取</strong>.</p>
+</blockquote>
+</li>
+<li><p><code>asyncio.all_tasks(loop=None)</code></p>
+<blockquote>
+<p>返回某一个<strong>loop中还没有结束的任务</strong></p>
+</blockquote>
+</li>
+</ol>
+<h2 id="异步函数的结果获取"><a href="#异步函数的结果获取" class="headerlink" title="异步函数的结果获取"></a>异步函数的结果获取</h2><p>对于异步编程、异步函数而言，最重要的就是<strong>异步函数调用结束之后，获取异步函数的返回值</strong>，我们可以有以下几种方式<strong>来获取函数的返回值</strong>，第一是直接通过<code>Task.result()</code>来获取；第二种是<strong>绑定一个回调函数</strong>来获取，<strong>即函数执行完毕后调用一个函数来获取异步函数的返回值。</strong></p>
+<ol>
+<li><p>直接通过<code>result</code>来获取.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> asyncio<br><span class="hljs-keyword">import</span> time<br> <br> <br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">hello1</span>(<span class="hljs-params">a,b</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hello world 01 begin&quot;</span>)<br>    <span class="hljs-keyword">await</span> asyncio.sleep(<span class="hljs-number">3</span>)  <span class="hljs-comment">#模拟耗时任务3秒</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hello again 01 end&quot;</span>)<br>    <span class="hljs-keyword">return</span> a+b<br> <br>coroutine=hello1(<span class="hljs-number">10</span>,<span class="hljs-number">5</span>)<br>loop = asyncio.get_event_loop()                <span class="hljs-comment">#第一步：创建事件循环</span><br>task = asyncio.ensure_future(coroutine)         <span class="hljs-comment">#第二步:将多个协程函数包装成任务列表</span><br>loop.run_until_complete(task)                  <span class="hljs-comment">#第三步：通过事件循环运行</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;-------------------------------------&#x27;</span>)<br><span class="hljs-built_in">print</span>(task.result())<br>loop.close() <br> <br><span class="hljs-string">&#x27;&#x27;&#x27;运行结果为</span><br><span class="hljs-string">Hello world 01 begin</span><br><span class="hljs-string">Hello again 01 end</span><br><span class="hljs-string">-------------------------------------</span><br><span class="hljs-string">15</span><br><span class="hljs-string">&#x27;&#x27;&#x27;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>通过定义<strong>回调函数</strong>来获取</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> asyncio<br><span class="hljs-keyword">import</span> time<br>   <br>  <span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">hello1</span>(<span class="hljs-params">a,b</span>):<br>      <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hello world 01 begin&quot;</span>)<br>      <span class="hljs-keyword">await</span> asyncio.sleep(<span class="hljs-number">3</span>)  <span class="hljs-comment">#模拟耗时任务3秒</span><br>      <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hello again 01 end&quot;</span>)<br>    <span class="hljs-keyword">return</span> a+b<br>   <br><span class="hljs-keyword">def</span> <span class="hljs-title function_">callback</span>(<span class="hljs-params">future</span>):   <span class="hljs-comment">#定义的回调函数,需要传future参数</span><br>    <span class="hljs-built_in">print</span>(future.result())<br> <br>loop = asyncio.get_event_loop()                <span class="hljs-comment">#第一步：创建事件循环</span><br>task=asyncio.ensure_future(hello1(<span class="hljs-number">10</span>,<span class="hljs-number">5</span>))       <span class="hljs-comment">#第二步:将多个协程函数包装成任务</span><br>task.add_done_callback(callback)                      <span class="hljs-comment">#并被任务绑定一个回调函数，默认传入结果参数</span><br> <br>loop.run_until_complete(task)                  <span class="hljs-comment">#第三步：通过事件循环运行</span><br>loop.close()                                   <span class="hljs-comment">#第四步：关闭事件循环</span><br> <br> <br><span class="hljs-string">&#x27;&#x27;&#x27;运行结果为：</span><br><span class="hljs-string">Hello world 01 begin</span><br><span class="hljs-string">Hello again 01 end</span><br><span class="hljs-string">15</span><br><span class="hljs-string">&#x27;&#x27;&#x27;</span><br></code></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>注意：</strong>所谓的<strong>回调函数</strong>，就是指协程函数coroutine<strong>执行结束时候会调用回调函数</strong>。并通过<strong>参数future获取协程执行的结果</strong>。我们创建的<strong>task和回调里的future对象</strong>，实际上是<strong>同一个对象</strong>，因为task是future的子类。</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="asyncio异步编程的基本模板"><a href="#asyncio异步编程的基本模板" class="headerlink" title="asyncio异步编程的基本模板"></a>asyncio异步编程的基本模板</h2><h3 id="第一步：构造事件循环"><a href="#第一步：构造事件循环" class="headerlink" title="第一步：构造事件循环"></a><strong>第一步：构造事件循环</strong></h3><ol>
+<li><p><code>loop = asyncio.get_running_loop()</code></p>
+<blockquote>
+<p>返回（获取）在当前线程中<strong>正在运行的事件循环</strong>，如果没有正在运行的事件循环，则会显示错误；它是<strong>python3.7中新添加的</strong></p>
+</blockquote>
+</li>
+<li><p><code>loop = asyncio.get_event_loop() </code></p>
+<blockquote>
+<p><strong>获得一个事件循环</strong>，如果当前线程还没有事件循环，则<strong>创建一个新的事件循环loop</strong>；</p>
+</blockquote>
+</li>
+<li><p><code>loop=asyncio.set_event_loop(thread) </code></p>
+<blockquote>
+<p>设置一个事件循环<strong>为当前线程的事件循环</strong>；</p>
+</blockquote>
+</li>
+<li><p><code>loop=asyncio.new_event_loop()</code></p>
+<blockquote>
+<p><strong>创建一个新的事件循环</strong></p>
+</blockquote>
+</li>
+</ol>
+<h3 id="第二步：将一个或者是多个协程函数包装成任务Task"><a href="#第二步：将一个或者是多个协程函数包装成任务Task" class="headerlink" title="第二步：将一个或者是多个协程函数包装成任务Task"></a><strong>第二步：将一个或者是多个协程函数包装成任务Task</strong></h3><ol>
+<li><p><code>task = asyncio.create_task(coro(参数列表))</code> </p>
+<blockquote>
+<p><strong>这是3.7版本新添加的</strong></p>
+</blockquote>
+</li>
+<li><p><code>task = asyncio.ensure_future(coro(参数列表))</code></p>
+</li>
+</ol>
+<blockquote>
+<p>需要注意的是，在使用<code>Task.result()</code>获取<strong>协程函数结果</strong>的时候，使用<code>asyncio.create_task()</code>却会显示错，但是使用<code>asyncio.ensure_future</code>却正确</p>
+</blockquote>
+<h3 id="第三步：通过事件循环运行"><a href="#第三步：通过事件循环运行" class="headerlink" title="第三步：通过事件循环运行"></a><strong>第三步：通过事件循环运行</strong></h3><ol>
+<li><p><code>loop.run_until_complete(asyncio.wait(tasks))</code></p>
+<blockquote>
+<p>通过<code>asyncio.wait()</code><strong>整合多个task</strong></p>
+</blockquote>
+</li>
+<li><p><code>loop.run_until_complete(asyncio.gather(tasks))</code></p>
+<blockquote>
+<p>通过<code>asyncio.gather()</code><strong>整合多个task</strong></p>
+</blockquote>
+</li>
+<li><p><code>loop.run_until_complete(task_1)  </code></p>
+<blockquote>
+<p><strong>单个任务则不需要整合</strong></p>
+</blockquote>
+</li>
+<li><p><del>loop.run_forever()</del></p>
+<blockquote>
+<p><del>但是这个方法在新版本已经取消，不再推荐使用，因为使用起来不简洁</del></p>
+</blockquote>
+</li>
+</ol>
+<h4 id="使用gather和wait整合task注册多个服务"><a href="#使用gather和wait整合task注册多个服务" class="headerlink" title="使用gather和wait整合task注册多个服务"></a>使用<code>gather</code>和<code>wait</code>整合task注册多个服务</h4><ol>
+<li><h4 id="参数形式不一样"><a href="#参数形式不一样" class="headerlink" title="参数形式不一样"></a><strong>参数形式不一样</strong></h4><p> <strong>gather</strong>的参数为 coroutines_or_futures,即如这种形式：</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">tasks = asyncio.gather(*[task1,task2,task3])<br>tasks = asyncio.gather(task1,task2,task3)<br>loop.run_until_complete(tasks)<br></code></pre></td></tr></table></figure>
+<p><strong>wait</strong>的参数为<strong>列表或者集合</strong>的形式，如下:</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">tasks = asyncio.wait([task1,task2,task3])<br>loop.run_until_complete(tasks)<br></code></pre></td></tr></table></figure>
+</li>
+<li><h4 id="返回的值不一样"><a href="#返回的值不一样" class="headerlink" title="返回的值不一样"></a><strong>返回的值不一样</strong></h4><p><strong>gather返回的是每一个任务运行的结果</strong>：</p>
+<blockquote>
+<h6 id="要以传入一个列表可变参数"><a href="#要以传入一个列表可变参数" class="headerlink" title="要以传入一个列表可变参数"></a>要以传入一个列表可变参数</h6></blockquote>
+<p><strong>可变参数允许在调用参数的时候传入多个参数,这些参数在调用时被自动组装为一个tuple</strong></p>
+<p><code>results = await asyncio.gather(*[tasks])</code> </p>
+<p><code>results = await asyncio.gather(task1,task2,task3)</code> </p>
+<p><strong>wait返回dones是已经完成的任务，pending是未完成的任务，都是集合类型</strong>：<br><code>done, pending = yield from asyncio.wait(fs)</code></p>
+</li>
+</ol>
+<blockquote>
+<p>简单来说：<strong>async.wait会返回两个值:done和pending</strong>，done为已完成的协程Task，pending为超时未完成的协程Task，<strong>需通过future.result调用Task的result。</strong></p>
+<p>而<code>async.gather</code>返回的是<strong>已完成Task的result</strong>。</p>
+</blockquote>
+<h3 id="第四步：关闭事件循环"><a href="#第四步：关闭事件循环" class="headerlink" title="第四步：关闭事件循环"></a><strong>第四步：关闭事件循环</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">loop.close()<br><span class="hljs-comment"># 以上示例都没有调用 loop.close，好像也没有什么问题。所以到底要不要调 loop.close 呢？</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><h3 id="协程阻塞问题"><a href="#协程阻塞问题" class="headerlink" title="协程阻塞问题"></a>协程阻塞问题</h3><p><strong>异步方式依然会有阻塞的</strong>，当我们定义的很多个异步方法<strong>彼此之间有一来</strong>的时候，比如，我必须要等到函数1执行完毕，<strong>函数2需要用到函数1的返回值</strong>，就会造成<strong>阻塞</strong>，这也是异步编程的难点之一，如何合理配置这些资源，尽量<strong>减少函数之间的明确依赖</strong>，这是很重要的。</p>
+<p><strong>结论</strong>：在有<strong>很多个异步方式</strong>的时候，一定要尽量避免这种<strong>异步函数的直接调用</strong>，这和同步是没什么区别的，一定要<strong>通过事件循环loop</strong>，<strong>“让事件循环在各个异步函数之间不停游走”</strong>，这样才不会造成阻塞。</p>
+<h2 id="代码片段"><a href="#代码片段" class="headerlink" title="代码片段"></a>代码片段</h2><h3 id="使用gather同时注册多个任务，实现并发"><a href="#使用gather同时注册多个任务，实现并发" class="headerlink" title="使用gather同时注册多个任务，实现并发"></a>使用gather同时注册多个任务，实现并发</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> asyncio<br><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">hello1</span>(<span class="hljs-params">a,b</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hello world 01 begin&quot;</span>)<br>    <span class="hljs-keyword">await</span> asyncio.sleep(<span class="hljs-number">3</span>)  <span class="hljs-comment">#模拟耗时任务3秒</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hello again 01 end&quot;</span>)<br>    <span class="hljs-keyword">return</span> a+b<br> <br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">hello2</span>(<span class="hljs-params">a,b</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hello world 02 begin&quot;</span>)<br>    <span class="hljs-keyword">await</span> asyncio.sleep(<span class="hljs-number">2</span>)   <span class="hljs-comment">#模拟耗时任务2秒</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hello again 02 end&quot;</span>)<br>    <span class="hljs-keyword">return</span> a-b<br> <br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">hello3</span>(<span class="hljs-params">a,b</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hello world 03 begin&quot;</span>)<br>    <span class="hljs-keyword">await</span> asyncio.sleep(<span class="hljs-number">4</span>)   <span class="hljs-comment">#模拟耗时任务4秒</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hello again 03 end&quot;</span>)<br>    <span class="hljs-keyword">return</span> a*b<br> <br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():  <span class="hljs-comment">#封装多任务的入口函数</span><br>    <span class="hljs-comment"># 用列表表达式创建任务</span><br>    tasks = [<br>        asyncio.ensure_future(hello1(<span class="hljs-number">10</span>,<span class="hljs-number">5</span>))<br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">10</span>)<br>    ]<br>    results = <span class="hljs-keyword">await</span> asyncio.gather(tasks)   <br>    <span class="hljs-keyword">for</span> result <span class="hljs-keyword">in</span> results:    <span class="hljs-comment">#通过迭代获取函数的结果，每一个元素就是相对应的任务的返回值，顺序都没变</span><br>        <span class="hljs-built_in">print</span>(result)<br> <br> <br>loop = asyncio.get_event_loop()               <br>loop.run_until_complete(main())<br>loop.close()<br></code></pre></td></tr></table></figure>
+
+<h3 id="异步-多线程"><a href="#异步-多线程" class="headerlink" title="异步+多线程"></a>异步+多线程</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> asyncio <br><span class="hljs-keyword">import</span> asyncio,time,threading<br> <br><span class="hljs-comment">#需要执行的耗时异步任务</span><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>(<span class="hljs-params">num</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;准备调用func,大约耗时<span class="hljs-subst">&#123;num&#125;</span>&#x27;</span>)<br>    <span class="hljs-keyword">await</span> asyncio.sleep(num)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;耗时<span class="hljs-subst">&#123;num&#125;</span>之后,func函数运行结束&#x27;</span>)<br> <br><span class="hljs-comment">#定义一个专门创建事件循环loop的函数，在另一个线程中启动它</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">start_loop</span>(<span class="hljs-params">loop</span>):<br>    asyncio.set_event_loop(loop)<br>    loop.run_forever()<br> <br><span class="hljs-comment">#定义一个main函数</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>    coroutine1 = func(<span class="hljs-number">3</span>)<br>    coroutine2 = func(<span class="hljs-number">2</span>)<br>    coroutine3 = func(<span class="hljs-number">1</span>)<br> <br>    new_loop = asyncio.new_event_loop()                        <span class="hljs-comment">#在当前线程下创建时间循环，（未启用），在start_loop里面启动它</span><br>    t = threading.Thread(target=start_loop,args=(new_loop,))   <span class="hljs-comment">#通过当前线程开启新的线程去启动事件循环</span><br>    t.start()<br> <br>    asyncio.run_coroutine_threadsafe(coroutine1,new_loop)  <span class="hljs-comment">#这几个是关键，代表在新线程中事件循环不断“游走”执行</span><br>    asyncio.run_coroutine_threadsafe(coroutine2,new_loop)<br>    asyncio.run_coroutine_threadsafe(coroutine3,new_loop)<br> <br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-string">&quot;iloveu&quot;</span>:<br>        <span class="hljs-built_in">print</span>(<span class="hljs-built_in">str</span>(i)+<span class="hljs-string">&quot;    &quot;</span>)<br> <br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    main()<br> <br><span class="hljs-string">&#x27;&#x27;&#x27;运行结果为：</span><br><span class="hljs-string">i    准备调用func,大约耗时3</span><br><span class="hljs-string">l    准备调用func,大约耗时2</span><br><span class="hljs-string">o    准备调用func,大约耗时1</span><br><span class="hljs-string">v</span><br><span class="hljs-string">e</span><br><span class="hljs-string">u</span><br><span class="hljs-string">耗时1之后,func函数运行结束</span><br><span class="hljs-string">耗时2之后,func函数运行结束</span><br><span class="hljs-string">耗时3之后,func函数运行结束</span><br><span class="hljs-string">&#x27;&#x27;&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="httpx-aiohttp-之异步请求"><a href="#httpx-aiohttp-之异步请求" class="headerlink" title="httpx aiohttp 之异步请求"></a>httpx aiohttp 之异步请求</h3><ul>
+<li><strong>aiohttp实现</strong></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> aiohttp<br><span class="hljs-keyword">import</span> asyncio<br> <br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>    <span class="hljs-keyword">async</span> <span class="hljs-keyword">with</span> aiohttp.ClientSession() <span class="hljs-keyword">as</span> client:<br>         <span class="hljs-keyword">async</span> <span class="hljs-keyword">with</span> client.get(<span class="hljs-string">&#x27;http://httpbin.org/get&#x27;</span>) <span class="hljs-keyword">as</span> resp:<br>              <span class="hljs-keyword">assert</span> resp.status == <span class="hljs-number">200</span><br>              html= <span class="hljs-keyword">await</span> resp.text()<br>              <span class="hljs-built_in">print</span>(html)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>httpx实现</strong></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">async</span> <span class="hljs-keyword">with</span> httpx.AsyncClient() <span class="hljs-keyword">as</span> client:<br>    resp = <span class="hljs-keyword">await</span> client.get(<span class="hljs-string">&#x27;http://httpbin.org/get&#x27;</span>)<br>    <span class="hljs-keyword">assert</span> resp.status_code == <span class="hljs-number">200</span><br>    html = resp.text<br></code></pre></td></tr></table></figure>
+
+<p>感觉总体上比较<code>aiohttp</code>写起来舒服多了<strong>，少写很多异步代码。</strong></p>
+<blockquote>
+<p>之前使用 aiohttp 中的 resp.status 来获取状态码的时候写了status_code，应该是使用 requests 习惯了吧，这下好了使用 httpx 不用担心这个写错的问题了。</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Python/" class="category-chain-item">Python</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Python/">#Python</a>
+      
+        <a href="/tags/Coding/">#Coding</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Python asyncio 异步协程百万并发</div>
+      <div>http://example.com/2021/08/18/Pytho-async/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>落落</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年8月18日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/08/18/Flask-Web-note/" title="Flask Web 框架学习笔记">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Flask Web 框架学习笔记</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/08/18/Python-Generator-Iterator-decorater/" title="Python 迭代器生成器修饰器">
+                        <span class="hidden-mobile">Python 迭代器生成器修饰器</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://unpkg.zhimg.com/gitalk@1/dist/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"b2fd920dada050fed5b3","clientSecret":"5c847cefe7df2df634886eafa178877899404378","repo":"AdminWhaleFall.github.io","owner":"WhaleFell","admin":["WhaleFell"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://gitalkproxy.gitalkproxy.workers.dev/?https://github.com/login/oauth/access_token"},
+          {
+            id: 'f863616b16d2e1096a8c20ed4a774767'
+          }
+        )
+        var gitalk = new Gitalk(options);
+        gitalk.render('gitalk-container');
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      粤ICP证113416号
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=1132608"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>粤公网安备1132608号</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://unpkg.zhimg.com/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://unpkg.zhimg.com/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://unpkg.zhimg.com/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://unpkg.zhimg.com/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://unpkg.zhimg.com/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://unpkg.zhimg.com/tocbot@4/dist/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://unpkg.zhimg.com/clipboard@2/dist/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://unpkg.zhimg.com/anchor-js@4/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://unpkg.zhimg.com/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

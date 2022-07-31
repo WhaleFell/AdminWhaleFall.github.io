@@ -1,0 +1,910 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="http://q1.qlogo.cn/g?b=qq&amp;nk=2734184475&amp;s=640">
+  <link rel="icon" href="http://q1.qlogo.cn/g?b=qq&amp;nk=2734184475&amp;s=640">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="落落">
+  <meta name="keywords" content="摄影,生活,技术,Python,Linux,可爱">
+  
+    <meta name="description" content="Flask Web 框架全学习笔记(不断更新)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flask Web 框架学习笔记">
+<meta property="og:url" content="http://example.com/2021/08/18/Flask-Web-note/index.html">
+<meta property="og:site_name" content="落落のBlog😊">
+<meta property="og:description" content="Flask Web 框架全学习笔记(不断更新)">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/AdminWhaleFall/Pic@master/img/20210818152255.png">
+<meta property="article:published_time" content="2021-08-18T11:37:48.000Z">
+<meta property="article:modified_time" content="2021-08-18T11:37:48.000Z">
+<meta property="article:author" content="落落">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="程序">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/AdminWhaleFall/Pic@master/img/20210818152255.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Flask Web 框架学习笔记 - 落落のBlog😊</title>
+
+  <link  rel="stylesheet" href="https://unpkg.zhimg.com/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://unpkg.zhimg.com/github-markdown-css@4/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://unpkg.zhimg.com/hint.css@2/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://unpkg.zhimg.com/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":21276303,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <!-- 51.la Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('//js.users.51.la/21276303.js');
+      }
+    </script>
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>😊落落のBlog😊</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://cdn.jsdelivr.net/gh/AdminWhaleFall/Pic@master/img/20210818152255.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Flask Web 框架学习笔记"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        落落
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-08-18 19:37" pubdate>
+          2021年8月18日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          5.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          44 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Flask Web 框架学习笔记</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Flask-Web-框架学习笔记"><a href="#Flask-Web-框架学习笔记" class="headerlink" title="Flask Web 框架学习笔记"></a>Flask Web 框架学习笔记</h1><p><img src="https://cdn.jsdelivr.net/gh/AdminWhaleFall/Pic@master/img/20210818152255.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="1-Flask-初始化参数"><a href="#1-Flask-初始化参数" class="headerlink" title="1. Flask 初始化参数"></a>1. Flask 初始化参数</h2><blockquote>
+<p><strong>Flask程序实例</strong>在创建的时候，需要<strong>默认传入当前Flask程序所指定的包</strong>(模块).</p>
+</blockquote>
+<ul>
+<li>import name<ul>
+<li>Flask程序所在的包(模块),传 <code>__name__</code> 就可以</li>
+<li>其可以决定Flask在访问静态文件时查找的路径</li>
+</ul>
+</li>
+<li>static_ <em>url</em> _path<ul>
+<li>静态文件访问路径，可以不传，默认为: &#x2F;+静态文件目录名</li>
+</ul>
+</li>
+<li>static_ folder<br>-静态文件存储的文件夹，可以不传，默认为 static</li>
+<li>template_ folder<ul>
+<li>模板文件存储的文件夹，可以不传，默认为 templates</li>
+</ul>
+</li>
+</ul>
+<h3 id="Flask-基本编写"><a href="#Flask-基本编写" class="headerlink" title="Flask 基本编写"></a>Flask 基本编写</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 导入Flask类</span><br><span class="hljs-keyword">from</span> flask <span class="hljs-keyword">import</span> Flask<br><span class="hljs-comment">#Flask类接收一个参数 __name__</span><br>app = Flask(__name__)<br><br><span class="hljs-comment"># 装饰器的作用是将路由映射到视图函数index</span><br><span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/&#x27;</span></span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">index</span>() :<br>	<span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;Hello World&#x27;</span><br><br><span class="hljs-comment"># Flask应用程序实例的run方法启动WEB服务器</span><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>	app.run()<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-Flask-工程配置加载的方式"><a href="#2-Flask-工程配置加载的方式" class="headerlink" title="2. Flask 工程配置加载的方式"></a>2. Flask 工程配置加载的方式</h2><h3 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h3><p>Flask将配置信息保存到了<code>app.config</code>属性中，该属性可以按照<strong>字典类型</strong>进行操作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python3">app.config.get(name) # 读取<br>app.config[name] # 修改<br></code></pre></td></tr></table></figure>
+
+<h3 id="设置"><a href="#设置" class="headerlink" title="设置"></a>设置</h3><ul>
+<li><p><strong>从配置对象中加载</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> flask <span class="hljs-keyword">import</span> Flask<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">DefaultConfig</span>(<span class="hljs-title class_ inherited__">oject</span>):<br>    <span class="hljs-comment"># 密钥</span><br>    SECRET_KET = <span class="hljs-string">&#x27;lovehyy2021209classpzezprem&#x27;</span><br>app = Flask(__name__)<br>app.config.from_object(DefaultConfig) <span class="hljs-comment"># 从配置对象中加载</span><br><br><span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/&#x27;</span></span>) </span><span class="hljs-comment"># 装饰器-&gt;路由</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">index</span>(): <span class="hljs-comment"># 视图函数</span><br>    <span class="hljs-built_in">print</span>(app.config[<span class="hljs-string">&#x27;SECRET_KEY&#x27;</span>])<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;hello world&#x27;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>从配置文件中加载</strong></p>
+<p>在项目目录下新建<code>setting.py</code>文件，存放大写常量</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">SECRET_KET = <span class="hljs-string">&#x27;lovehyy2021209classpzezprem&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>在Flask程序文件中</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">app = Flask(__name__)<br>app.config.from_pyfile(<span class="hljs-string">&#x27;setting.py&#x27;</span>) <span class="hljs-comment"># 从配置文件加载</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>从环境变量中加载</strong></p>
+<blockquote>
+<p><strong>环境变量(environment variables)</strong> 一般是指在操作系统中用来指定操作系统运行环境的一些参数，如:临时文件夹位置和系统文件夹位置等。环境变量是在操作系统中一个具有特定名字的对象，它包含了一个或者多个应用程序所将使用到的信息。</p>
+</blockquote>
+<p><strong>通俗的理解，环境变量就是我们设置在操作系统中，由操作系统代为保存的变量值</strong>:</p>
+<p>在Linux系统中设置和读取环境变量的方式如下:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">export 变量名=变量值 # 设置<br>echo $变量名 # 读取<br></code></pre></td></tr></table></figure>
+
+<p><strong>Flask使用环境变量加载配置的本质是通过环境变量值找到配置文件</strong>，再读取配置文件的信息，其使用方式为：<br><code>app.config.from_ envvar(&#39;环境变量名&#39;)</code></p>
+<p><strong>环境变量的值为配置文件的绝对路径</strong>先在终端中执行如下命令：</p>
+<p><code>export PROJECT_ _SETTING= &#39;~/ setting. py&#39;</code></p>
+<p>再运行如下代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">app = Flask(__ name__)<br>app.config.from_envvar(<span class="hljs-string">&#x27;PROJECT_ SETTING&#x27;</span>, silent=<span class="hljs-literal">True</span>)<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>各配置方式优缺点</strong></p>
+<ul>
+<li><strong>app.config.from _object(配置对象)</strong><ul>
+<li>继承- -&gt;优点复用</li>
+<li>敏感数据暴露缺点</li>
+</ul>
+</li>
+<li><strong>app.config.from_pyfile(配置文件)</strong><ul>
+<li>优点 –&gt; 独立文件保护敏感数据</li>
+<li>缺点 –&gt; 不能继承文件路径固定不灵活</li>
+</ul>
+</li>
+<li><strong>app.config.from_envvar(“环境变量名”)</strong><ul>
+<li>优点 –&gt; 独立文件保护敏感数据文件路径不固定灵活</li>
+<li>缺点 –&gt; 不方便要记得设置环境量</li>
+</ul>
+</li>
+<li><strong>设置环境变量</strong><ul>
+<li>终端export</li>
+<li>pycharm设置</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="利用工厂函数设置"><a href="#利用工厂函数设置" class="headerlink" title="利用工厂函数设置"></a>利用工厂函数设置</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> flask <span class="hljs-keyword">import</span> Flask<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">DefaultConfig</span>(<span class="hljs-title class_ inherited__">object</span>):<br>    DEBUG = <span class="hljs-literal">True</span><br>    SECRET_KEY = <span class="hljs-string">&#x27;lovehyy2021pzez209class&#x27;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">create_flask_app</span>(<span class="hljs-params">config</span>):<br>    <span class="hljs-string">&#x27;&#x27;&#x27;构建flask对象的工厂函数,传入配置对象,返回配置后的app对象&#x27;&#x27;&#x27;</span><br>    app = Flask(__name__, static_url_path=<span class="hljs-string">&#x27;/static&#x27;</span>, static_folder=<span class="hljs-string">&#x27;static&#x27;</span>)<br>    app.config.from_object(config)<br>    <span class="hljs-keyword">return</span> app<br><br>app = create_flask_app(DefaultConfig)<br><br><span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/&#x27;</span>, methods=[<span class="hljs-string">&quot;GET&quot;</span>]</span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">index</span>():<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Hello Flask&quot;</span><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__mian__&#x27;</span>:<br>    app.run()<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-Flask-运行方式"><a href="#3-Flask-运行方式" class="headerlink" title="3. Flask 运行方式"></a>3. Flask 运行方式</h2><h3 id="直接运行py文件启动"><a href="#直接运行py文件启动" class="headerlink" title="直接运行py文件启动"></a>直接运行py文件启动</h3><p>可以指定运行的主机IP地址，端口，是否开启调试模式</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">app.run(host=<span class="hljs-string">&quot;0.0.0.0&quot;</span>, port=<span class="hljs-number">5000</span>, debug=<span class="hljs-literal">True</span>)<br></code></pre></td></tr></table></figure>
+
+<p>关于<strong>DEBUG调试模式</strong>：</p>
+<ol>
+<li>程序代码修改后可以自动重启服务器</li>
+<li>在服务器出现相关错误的时候可以直接将错误信息返回到前端进行展示</li>
+</ol>
+<h3 id="新版启动方式"><a href="#新版启动方式" class="headerlink" title="新版启动方式"></a>新版启动方式</h3><p><strong>开发服务器</strong>启动方式：<br>在1.0版本之后，Flask调整了开发服务器的启动方式，由代码编写app. run()语句调整为<strong>命令启动flask</strong></p>
+<p>终端启动：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">export FLASK_APP=main # 设置启动的python文件<br>flask run # 在项目文件下执行<br></code></pre></td></tr></table></figure>
+
+<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>环境变量 <strong>FLASK_APP</strong> 指明flask的启动实例：</p>
+<ul>
+<li><code>flask run -h 0.0.0.0 -p 8000</code>绑定地址端口</li>
+<li><code>flask run --help</code> 获取帮助</li>
+<li>生产模式与开发模式的控制<br>通过<code>FLASK_ENV</code>环境变量指明<ul>
+<li><code>export FLASK_ ENV=production</code> 运行在生产模式，未指明则默认为此方式</li>
+<li><code>export FLASK_ ENV=development</code> 运行在开发模式</li>
+</ul>
+</li>
+</ul>
+<h2 id="4-Flask-路由"><a href="#4-Flask-路由" class="headerlink" title="4. Flask 路由"></a>4. Flask 路由</h2><h3 id="查询路由信息"><a href="#查询路由信息" class="headerlink" title="查询路由信息"></a>查询路由信息</h3><ul>
+<li><p>命令行方式</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">flask routes<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>在应用中的<code>url_ map</code>属性中保存着整个Flask应用的<strong>路由映射信息</strong>，可以通过读取这个属性获取<strong>路由信息</strong>。</p>
+<p><code>print(app.url_map)</code><br>如果想在程序中遍历路由信息，可以采用如下方式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python">  <span class="hljs-keyword">for</span> rule <span class="hljs-keyword">in</span> app.url_map.iter_rules():<br>      <span class="hljs-comment"># endpoint 视图函数的名字</span><br>      <span class="hljs-comment"># rule 路由的路径</span><br>  	<span class="hljs-built_in">print</span>( <span class="hljs-string">&#x27;name=&#123;&#125; path=&#123;&#125;&#x27;</span>. <span class="hljs-built_in">format</span>(rule.endpoint, rule.rule))<br><br>- 搭建一个**返回所有路由信息**的json接口<br><br>  ```python<br><span class="hljs-meta">  @app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/&#x27;</span>, methods=[<span class="hljs-string">&quot;GET&quot;</span>]</span>)</span><br>  <span class="hljs-keyword">def</span> <span class="hljs-title function_">index</span>():<br>      <span class="hljs-comment"># for rule in app.url_map.iter_rules():</span><br>      <span class="hljs-comment">#     print(f&quot;name=&#123;rule.endpoint&#125;;path=&#123;rule.rule&#125;&quot;)</span><br>      rules_iterator = app.url_map.iter_rules()<br>      <span class="hljs-comment"># 字典推导式</span><br>      dic = &#123;<br>          rule.endpoint: rule.rule<br>          <span class="hljs-keyword">for</span> rule <span class="hljs-keyword">in</span> rules_iterator<br>      &#125;<br>      <span class="hljs-comment"># 利用jsonify返回json数据</span><br>      <span class="hljs-keyword">return</span> jsonify(dic)<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="5-路由-options-限定请求方式-methods"><a href="#5-路由-options-限定请求方式-methods" class="headerlink" title="5. 路由 options 限定请求方式 methods"></a>5. 路由 options 限定请求方式 methods</h2><h3 id="请求方式"><a href="#请求方式" class="headerlink" title="请求方式"></a>请求方式</h3><ul>
+<li><p><strong>GET</strong>(自带)</p>
+</li>
+<li><p><strong>OPTIONS</strong>(自带)  -&gt; 简化版的GET请求用于询问服务器接口信息的<br>比如接口允许的请求方式允许的</p>
+<blockquote>
+<p>CORS跨域:<br><a target="_blank" rel="noopener" href="http://www.meiduo.site/">www.meiduo.site</a> -&gt; api.meiduo.site&#x2F;users&#x2F;1<br>options api.meiduo.site&#x2F;uses&#x2F;1</p>
+</blockquote>
+</li>
+<li><p><strong>HEAD</strong>(自带) -&gt; 简化版的GET请求</p>
+<blockquote>
+<p>只返回GET请求处理时的响应头，不返回响应体。</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="指定接口请求方式"><a href="#指定接口请求方式" class="headerlink" title="指定接口请求方式"></a>指定接口请求方式</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 利用修饰器中的methods返回设定请求接口方式</span><br><span class="hljs-comment"># 定义视图</span><br><span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/&#x27;</span>, methods=[<span class="hljs-string">&quot;POST&quot;</span>]</span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">index</span>():<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;POST API&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="6-蓝图"><a href="#6-蓝图" class="headerlink" title="6. 蓝图"></a>6. 蓝图</h2><h3 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h3><p>在一个<strong>Flask应用项目</strong>中，如果<strong>业务视图</strong>过多，可以用某种方式划分出的<strong>业务单元单独维护</strong>，将每个单元用到的<strong>视图、静态文件、模板文件</strong>等独立分开。</p>
+<p>例如从<strong>业务角度</strong>上，可将整个应用划分为<strong>用户模块单元、商品模块单元、订单模块单元</strong>，分别开发这些不同单元，并最终整合到一个项目应用中。</p>
+<h3 id="蓝图"><a href="#蓝图" class="headerlink" title="蓝图"></a>蓝图</h3><p>在Flask中，使用<strong>蓝图Blueprint</strong>来分模块组织管理。</p>
+<p>蓝图实际可以理解为是<strong>一个存储一组视图方法的容器对象</strong>，其具有如下特点:</p>
+<ul>
+<li>一个应用可以具有<strong>多个Blueprint</strong></li>
+<li>可以将一个<strong>Blueprint注册到</strong>任何一个未使用的<strong>URL</strong>下，比如“&#x2F;user”、 “&#x2F;godds”。</li>
+<li><strong>Blueprint</strong>可以单独具有<strong>自己的模板、静态文件</strong>或者其它的通用操作方法，它并不是必须要实现应用的视图和函数的</li>
+<li>在一个<strong>应用初始化</strong>时，就应该要<strong>注册需要使用的Blueprint</strong>。★</li>
+<li>但是一个<strong>Blueprint</strong>并不是一个完整的应用，它<strong>不能独立于应用运行</strong>，而必须要<strong>注册到某一个应用中</strong>。★</li>
+</ul>
+<h3 id="定义蓝图"><a href="#定义蓝图" class="headerlink" title="定义蓝图"></a>定义蓝图</h3><ol>
+<li><p>定义</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">user_bp = Blueprint(<span class="hljs-string">&#x27;user&#x27;</span>, __name__)<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>在这个<strong>蓝图对象上进行操作</strong>,<strong>注册路由</strong>,<strong>指定静态文件夹</strong>,<strong>注册模版过滤器</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-meta">@user_bp.route(<span class="hljs-params"><span class="hljs-string">&#x27;/&#x27;</span></span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">user_profile</span>():<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;user_profile&#x27;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>在应用对象中注册这个蓝图对象</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">app.register_blueprint(user_bp)<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="单文件蓝图"><a href="#单文件蓝图" class="headerlink" title="单文件蓝图"></a>单文件蓝图</h3><p>可以将创建蓝图对象与定义视图函数放在一个文件中。</p>
+<h3 id="目录（包）蓝图"><a href="#目录（包）蓝图" class="headerlink" title="目录（包）蓝图"></a>目录（包）蓝图</h3><p>对于一个打算包含<strong>多个文件的蓝图</strong>，通常将<strong>创建蓝图对象</strong>放到Python包的<code>__init__.py</code> 文件中</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli"><span class="hljs-params">---------</span> project <span class="hljs-comment"># 工程目录</span><br>	|<span class="hljs-params">----</span> main.py <span class="hljs-comment"># 启动文件</span><br>	|<span class="hljs-params">----</span> user <span class="hljs-comment"># 用户蓝图</span><br>	|	|<span class="hljs-params">----</span> __init__.py <span class="hljs-comment"># 此处创建蓝图对象</span><br>	|	|<span class="hljs-params">----</span> views.py<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/AdminWhaleFall/Pic@master/img/20210725224412.png" srcset="/img/loading.gif" lazyload alt="蓝图包目录实例"></p>
+<h4 id="循环引用问题"><a href="#循环引用问题" class="headerlink" title="循环引用问题"></a>循环引用问题</h4><p><img src="https://cdn.jsdelivr.net/gh/AdminWhaleFall/Pic@master/img/20210725224744.png" srcset="/img/loading.gif" lazyload alt="循环引用问题"></p>
+<blockquote>
+<p>所以导入视图函数要放在 <code>__init__.py</code> 文件的最后</p>
+</blockquote>
+<h3 id="蓝图内部静态文件"><a href="#蓝图内部静态文件" class="headerlink" title="蓝图内部静态文件"></a>蓝图内部静态文件</h3><p>和<strong>应用对象</strong>不同，蓝图对象创建时<strong>不会默认注册静态目录的路由</strong>。需要我们在创建时指定<code>static_folder</code>参数。</p>
+<p>下面的示例将蓝图所在目录下的<code>static_admin</code>目录设置为静态目录</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">admin = Blueprint (<span class="hljs-string">&quot;admin&quot;</span>,__ name__ , static_folder=<span class="hljs-string">&#x27;static_admin&#x27;</span>)<br>app.register_blueprint (admin, url_prefix=<span class="hljs-string">&#x27;/admin&#x27;</span> )<br></code></pre></td></tr></table></figure>
+
+<p>现在就可以使用<code>/admin/static_admin/&lt;filename&gt;</code>访问<code>static_ admin</code>目录下的静态文件了。<br>也可通过<code>static_url_path</code>改变访问路径</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">admin = Blueprint(<span class="hljs-string">&quot;admin&quot;</span>,__name__, static_folder=<span class="hljs-string">&#x27;static_admin&#x27;</span> ,static_url_path=<span class="hljs-string">&#x27;/lib&#x27;</span>)<br>app.register_blueprint(admin, url_prefix=<span class="hljs-string">&#x27;/admin&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<h2 id="7-处理请求"><a href="#7-处理请求" class="headerlink" title="7. 处理请求"></a>7. 处理请求</h2><blockquote>
+<p>在视图编写中需要读取客户端请求携带的数据时，如何才能正确的<strong>取出数据</strong>呢?<br><strong>请求携带的数据</strong>可能出现在HTTP报文中的不同位置，需要<strong>使用不同的方法来获取参数</strong>。</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Python/" class="category-chain-item">Python</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Python/">#Python</a>
+      
+        <a href="/tags/%E7%A8%8B%E5%BA%8F/">#程序</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Flask Web 框架学习笔记</div>
+      <div>http://example.com/2021/08/18/Flask-Web-note/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>落落</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年8月18日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/12/19/wky-help/" title="玩客云帮助手册">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">玩客云帮助手册</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/08/18/Pytho-async/" title="Python asyncio 异步协程百万并发">
+                        <span class="hidden-mobile">Python asyncio 异步协程百万并发</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://unpkg.zhimg.com/gitalk@1/dist/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"b2fd920dada050fed5b3","clientSecret":"5c847cefe7df2df634886eafa178877899404378","repo":"AdminWhaleFall.github.io","owner":"WhaleFell","admin":["WhaleFell"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://gitalkproxy.gitalkproxy.workers.dev/?https://github.com/login/oauth/access_token"},
+          {
+            id: '7ec6ceb545ab859a3637f4e865bd132d'
+          }
+        )
+        var gitalk = new Gitalk(options);
+        gitalk.render('gitalk-container');
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      粤ICP证113416号
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=1132608"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>粤公网安备1132608号</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://unpkg.zhimg.com/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://unpkg.zhimg.com/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://unpkg.zhimg.com/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://unpkg.zhimg.com/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://unpkg.zhimg.com/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://unpkg.zhimg.com/tocbot@4/dist/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://unpkg.zhimg.com/clipboard@2/dist/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://unpkg.zhimg.com/anchor-js@4/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://unpkg.zhimg.com/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
